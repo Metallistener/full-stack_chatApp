@@ -68,3 +68,34 @@ export const sendMessage = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
+export const deleteMessage = async (req, res) => {
+  try {
+    const { id: msgId } = req.params;
+
+    if (!msgId) {
+      return res.status(400).json({
+        message: 'You need to provide "id" to delete the message',
+      });
+    }
+
+    const deletedMsg = await Message.findByIdAndDelete(msgId);
+
+    if (!deletedMsg) {
+       return res.status(404).json({
+        message: `Message ${msgId} not found`,
+      });
+    }
+
+    const receiverSocketId = getReceiverSocketId(deletedMsg.receiverId);
+
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("deleteMessage", deletedMsg);
+    }
+
+    return res.status(200).json(deletedMsg);
+  } catch (error) {
+    console.log("Error in deleteMessage controller: ", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};

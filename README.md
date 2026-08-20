@@ -76,6 +76,30 @@ NODE_ENV=production
 > - For local development without Docker, change `MONGODB_URI` to `mongodb://localhost:27017/chatApp`
 > - You can use command ```echo "Text what you want" | base64
 
+### ⚙️ Backend Environment Configuration
+
+The backend application uses dotenv to load environment variables from the .env file.
+
+Because the .env file is located in the root directory of the monorepo, you need to explicitly configure the path to the environment file in the backend application.
+
+For example:
+
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({
+  path: path.resolve(process.cwd(), "../.env"),
+});
+
+Make sure the path points to the location of your .env file relative to the backend application's working directory.
+
+After configuring dotenv, the backend will be able to access variables such as:
+
+process.env.MONGODB_URI
+process.env.JWT_SECRET
+process.env.PORT
+process.env.NODE_ENV
+
 ### Clone the Repository
 
 ```bash
