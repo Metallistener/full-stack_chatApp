@@ -13,7 +13,9 @@ import healthRoutes from "./routes/health.route.js";
 import { app, server } from "./lib/socket.js";
 
 // Load environment variables from .env file
-dotenv.config();
+dotenv.config({
+  path: path.resolve(process.cwd(), "../.env"),
+});
 
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
